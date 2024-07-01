@@ -1,0 +1,6 @@
+- id: detect-env-leakage
+  name: Trim Trailing Whitespace
+  description: This hook trims trailing whitespace.
+  entry: detect-env-leakage
+  language: python
+  types: [text]
