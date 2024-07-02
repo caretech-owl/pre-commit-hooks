@@ -1,5 +1,5 @@
 [project]
-name = "custom_pre_commit_hooks"
+name = "pre-commit-hooks"
 version = "0.0.1"
 authors = [
   { name="Alexander Neumann", email="alexander.neumann1@hsbi.de" },
@@ -7,6 +7,9 @@ authors = [
 description = "Custom pre-commit hooks for CareTech OWL"
 readme = "README.md"
 requires-python = ">=3.8"
+dependencies = [
+  'python-dotenv ~= 1.0.1',
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -16,3 +19,6 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/caretech-owl/pre-commit-hooks"
 Issues = "https://github.com/caretech-owl/pre-commit-hooks/issues"
+
+[project.scripts]
+detect-env-leakage = "pre_commit_hooks.detect_env_leakage:main"
