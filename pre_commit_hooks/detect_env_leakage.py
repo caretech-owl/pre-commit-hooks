@@ -1,6 +1,7 @@
 from typing import Sequence
 import argparse
 import os
+from collections import defaultdict
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv(usecwd=True))
@@ -47,11 +48,16 @@ ignored_values = {
     "2",
 }
 
+expected = defaultdict(set)
+expected["CI_SERVER_URL"].update("pyproject.toml", "cruft.json")
+expected["CI_PROJECT_PATH"].update("pyproject.toml", "cruft.json")
+expected["CI_PROJECT_URL"].update("pyproject.toml", "cruft.json")
+expected["CI_API_V4_URL"].update("pyproject.toml", "cruft.json")
 
 def check_env_leakage(contents: str, name: str, ignored: list[str]) -> bool:
     retv = 0
     for key, value in os.environ.items():
-        if key.lower() in ignored or value.lower() in ignored_values:
+        if key.lower() in ignored or value.lower() in ignored_values or any(name.endswith(fname) for fname in expected[key]):
             continue
         if any(name in key.lower() for name in checked_names) or any(
             val in value.lower() for val in checked_values
@@ -59,7 +65,7 @@ def check_env_leakage(contents: str, name: str, ignored: list[str]) -> bool:
             for i, line in enumerate(contents):
                 if value in line:
                     print(
-                        f"Environment variable {key}={value} leaked in file {name}:{i + 1}"
+                        f"Environment variable {key} leaked in file {name}:{i + 1}"
                     )
                     retv = 1
                     break
