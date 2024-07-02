@@ -20,7 +20,17 @@ checked_names = {
     "uri",
     "url",
 }
-checked_values = {"AppData", "home", "http", "ssh", "Program Files", "Users"}
+
+checked_values = {
+    "AppData",
+    "home",
+    "http://",
+    "https://",
+    "ssh://",
+    "Program Files",
+    "Users",
+}
+
 ignored_values = {
     "",
     "false",

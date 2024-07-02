@@ -4,3 +4,4 @@
   entry: detect-env-leakage
   language: python
   types: [text]
+  stages: [pre-commit, pre-push, pre-merge-commit]
