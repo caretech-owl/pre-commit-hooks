@@ -21,7 +21,22 @@ checked_names = {
     "url",
 }
 checked_values = {"AppData", "home", "http", "ssh", "Program Files", "Users"}
-ignored_values = {"", "false", "no", "none", "null", "off", "on", "true", "yes", "default", "0", "1", "2"}
+ignored_values = {
+    "",
+    "false",
+    "no",
+    "none",
+    "null",
+    "off",
+    "on",
+    "true",
+    "yes",
+    "default",
+    "0",
+    "1",
+    "2",
+}
+
 
 def check_env_leakage(contents: str, name: str, ignored: list[str]) -> bool:
     retv = 0
@@ -44,7 +59,7 @@ def check_env_leakage(contents: str, name: str, ignored: list[str]) -> bool:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("filenames", nargs="*")
-    parser.add_argument("--ignore", action=lambda s: [i for i in s.split(',')], default=[])
+    parser.add_argument("--ignore", type=str, default="")
     args = parser.parse_args(argv)
 
     retv = 0
@@ -52,7 +67,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     for filename in args.filenames:
         with open(filename, "rt") as f:
             contents = f.read()
-        retv |= check_env_leakage(contents.split("\n"), filename, args.ignore)
+        retv |= check_env_leakage(
+            contents.split("\n"),
+            filename,
+            args.ignore.split(",") if args.ignore else [],
+        )
 
     return retv
 
