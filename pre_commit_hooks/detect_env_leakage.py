@@ -64,14 +64,14 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     retv = 0
 
+    ignore_list = (
+        [ignore.lower() for ignore in args.ignore.split(",")] if args.ignore else []
+    )
+
     for filename in args.filenames:
         with open(filename, "rt") as f:
             contents = f.read()
-        retv |= check_env_leakage(
-            contents.split("\n"),
-            filename,
-            args.ignore.split(",") if args.ignore else [],
-        )
+        retv |= check_env_leakage(contents.split("\n"), filename, ignore_list)
 
     return retv
 
