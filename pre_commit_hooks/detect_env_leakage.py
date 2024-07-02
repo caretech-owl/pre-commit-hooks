@@ -48,16 +48,16 @@ ignored_values = {
     "2",
 }
 
-expected = defaultdict(set)
-expected["CI_SERVER_URL"].update("pyproject.toml", "cruft.json")
-expected["CI_PROJECT_PATH"].update("pyproject.toml", "cruft.json")
-expected["CI_PROJECT_URL"].update("pyproject.toml", "cruft.json")
-expected["CI_API_V4_URL"].update("pyproject.toml", "cruft.json")
+expected: dict[str, set[str]] = defaultdict(set)
+expected["CI_SERVER_URL".lower()].update("pyproject.toml", "cruft.json")
+expected["CI_PROJECT_PATH".lower()].update("pyproject.toml", "cruft.json")
+expected["CI_PROJECT_URL".lower()].update("pyproject.toml", "cruft.json")
+expected["CI_API_V4_URL".lower()].update("pyproject.toml", "cruft.json")
 
 def check_env_leakage(contents: str, name: str, ignored: list[str]) -> bool:
     retv = 0
     for key, value in os.environ.items():
-        if key.lower() in ignored or value.lower() in ignored_values or any(name.endswith(fname) for fname in expected[key]):
+        if key.lower() in ignored or value.lower() in ignored_values or any(name.lower().endswith(fname.lower()) for fname in expected[key.lower()]):
             continue
         if any(name in key.lower() for name in checked_names) or any(
             val in value.lower() for val in checked_values
